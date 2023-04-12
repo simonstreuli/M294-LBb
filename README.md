@@ -1,8 +1,10 @@
 ## Modul 294 Frontend einer interaktiven Webapplikation realisieren
 
-**LBb Projekt von Simon Streuli**
+**LB-b Projekt von Simon Streuli**
 
 **To Do List**
+
+![To Do Page](./images/ToDoList.png)
 
 **Anwendungsfälle**
 
@@ -21,4 +23,11 @@
 8. Als Benutzer kann werde ich bei fehlerhaften Eingaben gewarnt (Validation)
 9. Als Benutzer werden mir Fehler auf eine benutzerfreundliche Art angezeigt (Errorhandling)
 
-[**Testprotokoll**]()
+**Testprotokoll**
+
+[PDF Link](./Testprotokoll%20LB%20b.pdf)
+
+**Inspirierte Codeteile**
+
+- Logout inspiriert von Jann Fanzun
+- CSS Login ChatGPT
