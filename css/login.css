@@ -86,3 +86,6 @@ button[type="button"]:hover {
 p {
   color: #635985;
 }
+input:placeholder-shown {
+  font-style: italic;
+}

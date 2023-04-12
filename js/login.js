@@ -7,6 +7,8 @@ async function checkLoggedIn() {
     window.location.href = "index.html";
   } else if (response.status === 401) {
     alert("You are not logged in!");
+  } else {
+    alert("Something went wrong!");
   }
 }
 
