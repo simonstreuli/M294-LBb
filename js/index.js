@@ -19,7 +19,7 @@ function renderTodos(data) {
       todo.completed = completedBox.checked;
       li.classList.toggle("completed", todo.completed);
     });
-    li.appendChild(completedBox);
+    li.prepend(completedBox);
 
     const deleteButton = document.createElement("button");
     deleteButton.innerText = "delete";
@@ -114,5 +114,31 @@ async function editTask(id, completed, newTitle) {
     console.error("There was a problem with editing the task:", error);
   }
 }
+async function checkLoggedIn() {
+  const response = await fetch("http://localhost:3000/auth/cookie/status", {
+    credentials: "include",
+  });
+  if (response.status === 401) {
+    window.location.href = "login.html";
+  }
+}
+function authCookieLogoutPost() {
+  fetch("http://localhost:3000/auth/cookie/logout", {
+    method: "POST",
+    credentials: "include",
+  })
+    .then((response) => {
+      if (response.ok) {
+        alert("Logout successful");
+        window.location.href = "login.html";
+      } else {
+        alert("Error logging out");
+      }
+    })
+    .catch((error) => {
+      alert("Error logging out:", error);
+    });
+}
+checkLoggedIn();
 getTasks();
 sumbmitbtn.addEventListener("click", addTask);
