@@ -1,12 +1,15 @@
 const form = document.querySelector("#todo-form");
 const input = document.querySelector("#todo-input");
 const list = document.querySelector("#todo-list");
+const sumbmitbtn = document.querySelector("#submit-btn");
 
-function renderTodos() {
+function renderTodos(data) {
   list.replaceChildren();
   for (let i = 0; i < data.length; i++) {
     const todo = data[i];
     const li = document.createElement("li");
+
+    li.textContent = todo.title;
 
     const completedBox = document.createElement("input");
     completedBox.type = "checkbox";
@@ -17,10 +20,6 @@ function renderTodos() {
       li.classList.toggle("completed", todo.completed);
     });
     li.appendChild(completedBox);
-
-    const titleSpan = document.createElement("span");
-    titleSpan.textContent = todo.title;
-    li.appendChild(titleSpan);
 
     const deleteButton = document.createElement("button");
     deleteButton.innerText = "delete";
@@ -34,7 +33,7 @@ function renderTodos() {
     editButton.innerText = "edit";
     editButton.classList.add("edit");
     editButton.addEventListener("click", () => {
-      let newTitle = prompt("New text");
+      const newTitle = prompt("New text");
       if (newTitle) {
         editTask(todo.id, todo.completed, newTitle);
       } else {
@@ -49,31 +48,29 @@ function renderTodos() {
 }
 
 async function getTasks() {
-  try {
-    const response = await fetch("http://localhost:3000/tasks");
-    if (!response.ok) {
-      throw new Error("Failed to fetch tasks");
-    }
-    data = await response.json();
-    renderTodos();
-  } catch (error) {
-    console.error("There was a problem with the fetch operation:", error);
-  }
+  const response = await fetch("http://localhost:3000/tasks");
+  const data = await response.json();
+  renderTodos(data);
 }
-async function addTask() {
+async function addTask(event) {
+  event.preventDefault();
   try {
     const title = input.value;
     if (!title) {
-      throw new Error("Can not be empty");
+      alert("Can not be empty");
     }
     const response = await fetch("http://localhost:3000/tasks", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ title: title }),
     });
+    const data = await response.json();
     if (!response.ok) {
       throw new Error(`Failed to add task: ${response.statusText}`);
+    } else {
+      alert("Task added successfully");
     }
+    renderTodos([data]);
     getTasks();
   } catch (error) {
     console.error("There was a problem with adding the task:", error);
@@ -89,7 +86,10 @@ async function deleteTask(id) {
     });
     if (!response.ok) {
       throw new Error(`Failed to delete task with id ${id}`);
+    } else {
+      alert("Task deleted successfully");
     }
+
     getTasks();
   } catch (error) {
     console.error("There was a problem with deleting the task:", error);
@@ -103,8 +103,11 @@ async function editTask(id, completed, newTitle) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ id: id, completed: completed, title: newTitle }),
     });
+
     if (!response.ok) {
       throw new Error(`Failed to edit task ${id}`);
+    } else {
+      alert("Task edited successfully");
     }
     getTasks();
   } catch (error) {
@@ -112,3 +115,4 @@ async function editTask(id, completed, newTitle) {
   }
 }
 getTasks();
+sumbmitbtn.addEventListener("click", addTask);
