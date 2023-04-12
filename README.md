@@ -31,3 +31,8 @@
 
 - Logout inspiriert von Jann Fanzun
 - CSS Login ChatGPT
+
+**URLs**
+
+- index.html => Übersichtsseite mit Tasks
+- login.html => Loginseite für Login
