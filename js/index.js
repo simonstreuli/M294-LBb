@@ -9,7 +9,7 @@ function renderTodos(data) {
     const todo = data[i];
     const li = document.createElement("li");
 
-    li.textContent = todo.title;
+    li.textContent = todo.id + " " + todo.title;
 
     const completedBox = document.createElement("input");
     completedBox.type = "checkbox";
