@@ -2,54 +2,113 @@ const form = document.querySelector("#todo-form");
 const input = document.querySelector("#todo-input");
 const list = document.querySelector("#todo-list");
 
-let todos = [];
-
 function renderTodos() {
-  list.innerHTML = "";
-  for (let i = 0; i < todos.length; i++) {
-    const todo = todos[i];
+  list.replaceChildren();
+  for (let i = 0; i < data.length; i++) {
+    const todo = data[i];
     const li = document.createElement("li");
-    li.textContent = todo.text;
+
     const completedBox = document.createElement("input");
     completedBox.type = "checkbox";
     completedBox.checked = todo.completed;
+
     completedBox.addEventListener("change", () => {
       todo.completed = completedBox.checked;
       li.classList.toggle("completed", todo.completed);
     });
+    li.appendChild(completedBox);
+
+    const titleSpan = document.createElement("span");
+    titleSpan.textContent = todo.title;
+    li.appendChild(titleSpan);
+
     const deleteButton = document.createElement("button");
-    deleteButton.textContent = "Delete";
+    deleteButton.innerText = "delete";
     deleteButton.classList.add("delete");
     deleteButton.addEventListener("click", () => {
-      todos.splice(i, 1);
-      renderTodos();
+      deleteTask(todo.id);
     });
+    li.appendChild(deleteButton);
+
     const editButton = document.createElement("button");
-    editButton.textContent = "Edit";
+    editButton.innerText = "edit";
     editButton.classList.add("edit");
     editButton.addEventListener("click", () => {
-      const newText = prompt("New text", todo.text);
-      if (newText) {
-        todo.text = newText;
-        renderTodos();
+      let newTitle = prompt("New text");
+      if (newTitle) {
+        editTask(todo.id, todo.completed, newTitle);
+      } else {
+        alert("Can not be empty");
       }
     });
-    li.appendChild(completedBox);
-    li.appendChild(deleteButton);
     li.appendChild(editButton);
-    list.appendChild(li);
+
     li.classList.toggle("completed", todo.completed);
+    list.appendChild(li);
   }
 }
 
-form.addEventListener("submit", (event) => {
-  event.preventDefault();
-  const text = input.value.trim();
-  if (text !== "") {
-    todos.push({ text, completed: false });
-    input.value = "";
+async function getTasks() {
+  try {
+    const response = await fetch("http://localhost:3000/tasks");
+    if (!response.ok) {
+      throw new Error("Failed to fetch tasks");
+    }
+    data = await response.json();
     renderTodos();
+  } catch (error) {
+    console.error("There was a problem with the fetch operation:", error);
   }
-});
+}
+async function addTask() {
+  try {
+    const title = input.value;
+    if (!title) {
+      throw new Error("Can not be empty");
+    }
+    const response = await fetch("http://localhost:3000/tasks", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ title: title }),
+    });
+    if (!response.ok) {
+      throw new Error(`Failed to add task: ${response.statusText}`);
+    }
+    getTasks();
+  } catch (error) {
+    console.error("There was a problem with adding the task:", error);
+  }
+}
 
-renderTodos();
+async function deleteTask(id) {
+  try {
+    const response = await fetch("http://localhost:3000/task/" + id, {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id: id }),
+    });
+    if (!response.ok) {
+      throw new Error(`Failed to delete task with id ${id}`);
+    }
+    getTasks();
+  } catch (error) {
+    console.error("There was a problem with deleting the task:", error);
+  }
+}
+
+async function editTask(id, completed, newTitle) {
+  try {
+    const response = await fetch("http://localhost:3000/tasks", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id: id, completed: completed, title: newTitle }),
+    });
+    if (!response.ok) {
+      throw new Error(`Failed to edit task ${id}`);
+    }
+    getTasks();
+  } catch (error) {
+    console.error("There was a problem with editing the task:", error);
+  }
+}
+getTasks();

@@ -1,11 +1,13 @@
 body {
-  font-family: sans-serif;
-  margin: 0;
-  padding: 0;
+  font-family: "Poppins", sans-serif;
+  background-color: #635985;
+  color: white;
+  text-align: center;
 }
 
 h1 {
   text-align: center;
+  font-size: 60px;
 }
 
 #todo-form {
@@ -19,16 +21,20 @@ h1 {
   padding: 5px;
   width: 60%;
   font-size: 16px;
+  border-radius: 10px;
+  border: none;
+  outline: none;
 }
 
 #todo-list {
   margin: 0;
   padding: 0;
+  font-size: larger;
 }
 
 #todo-list li {
   display: flex;
-  justify-content: space-between;
+  justify-content: left;
   align-items: center;
   padding: 10px;
   border-bottom: 1px solid #ccc;
@@ -49,13 +55,15 @@ h1 {
 }
 
 .delete {
-  background-color: #f44336;
-  color: white;
+  background-color: white;
+  color: black;
   border: none;
-  padding: 5px 10px;
+  padding: 5px 50px;
   border-radius: 5px;
-  margin-left: 10px;
   cursor: pointer;
+  position: absolute;
+  margin-left: 10px;
+  left: 80%;
 }
 
 .delete:hover {
@@ -63,15 +71,29 @@ h1 {
 }
 
 .edit {
-  background-color: #2196f3;
-  color: white;
+  background-color: white;
+  color: black;
   border: none;
-  padding: 5px 10px;
+  padding: 5px 50px;
   border-radius: 5px;
-  margin-left: 10px;
   cursor: pointer;
+  position: absolute;
+  left: 90%;
 }
 
 .edit:hover {
   background-color: #1976d2;
+}
+
+#submit-btn {
+  background: #18122b;
+  color: white;
+  height: 50px;
+  width: 100px;
+  border-radius: 10px;
+  text-shadow: none;
+}
+
+input:placeholder-shown {
+  font-style: italic;
 }
